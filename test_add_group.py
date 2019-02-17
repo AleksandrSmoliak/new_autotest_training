@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from selenium.webdriver.firefox.webdriver import WebDriver
+from group import Group
 
 import unittest
 
@@ -24,7 +25,7 @@ class test_add_group(unittest.TestCase):
         # Переход на страницу с группами
         self.open_group_page(wd)
         # Создание новой группы
-        self.create_group(wd, name="group name", header="group header", footer="group footer")
+        self.create_group(wd, Group(name="group name", header="group header", footer="group footer"))
         # Возврат на страницу со списком групп
         self.return_to_group_page(wd)
         # Логаут
@@ -39,7 +40,7 @@ class test_add_group(unittest.TestCase):
         # Переход на страницу с группами
         self.open_group_page(wd)
         # Создание новой группы
-        self.create_group(wd, name="", header="", footer="")
+        self.create_group(wd, Group(name="", header="", footer=""))
         # Возврат на страницу со списком групп
         self.return_to_group_page(wd)
         # Логаут
@@ -51,18 +52,18 @@ class test_add_group(unittest.TestCase):
     def return_to_group_page(self, wd):
         wd.find_element_by_link_text("groups").click()
 
-    def create_group(self, wd, name, header, footer):
+    def create_group(self, wd, group):
         wd.find_element_by_name("new").click()
         # Заполнение формы
         wd.find_element_by_name("group_name").click()
         wd.find_element_by_name("group_name").clear()
-        wd.find_element_by_name("group_name").send_keys(name)
+        wd.find_element_by_name("group_name").send_keys(group.name)
         wd.find_element_by_name("group_header").click()
         wd.find_element_by_name("group_header").clear()
-        wd.find_element_by_name("group_header").send_keys(header)
+        wd.find_element_by_name("group_header").send_keys(group.header)
         wd.find_element_by_name("group_footer").click()
         wd.find_element_by_name("group_footer").clear()
-        wd.find_element_by_name("group_footer").send_keys(footer)
+        wd.find_element_by_name("group_footer").send_keys(group.footer)
         # Сохранение данных формы
         wd.find_element_by_name("submit").click()
 
