@@ -18,7 +18,7 @@ def test_add_group(app):
     # Авторизация
     app.session.login(username="admin", password="secret")
     # Создание новой группы
-    app.create_group(Group(name="group name", header="group header", footer="group footer"))
+    app.group.create(Group(name="group name", header="group header", footer="group footer"))
     # Логаут
     app.session.logout()
 
@@ -27,6 +27,6 @@ def test_empty_group(app):
     # Авторизация
     app.session.login(username="admin", password="secret")
     # Создание новой группы
-    app.create_group(Group(name="", header="", footer=""))
+    app.group.create(Group(name="", header="", footer=""))
     # Логаут
     app.session.logout()
