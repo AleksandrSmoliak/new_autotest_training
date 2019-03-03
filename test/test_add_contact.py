@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from selenium.webdriver.firefox.webdriver import WebDriver
-from contact import Contact
+from model.contact import Contact
 
 import unittest
 
