@@ -62,3 +62,12 @@ class ContactHelper:
         wd.find_element_by_name("address2").click()
         # Сохранение формы контакта
         wd.find_element_by_xpath("//div[@id='content']/form/input[21]").click()
+
+    def delete_first_contact(self):
+        wd = self.app.wd
+        # Активировать чекбокс (первый с этим именем)
+        wd.find_element_by_name("selected[]").click()
+        # Клик по кнопке удаления
+        wd.find_element_by_xpath("//div[@id='content']/form[2]/div[2]/input").click()
+        # Подтверждеие удаления элемента в окне алерта
+        wd.switch_to_alert().accept()
