@@ -5,7 +5,7 @@ fixture = None  # Задаем глобальную переменную для 
 
 
 @pytest.fixture
-def app(request):
+def app():
     global fixture  # Объявление глобальной переменной
     # Проверяем, если фикстуры нету или она не валидна, тогда создаем ее.
     if fixture is None:

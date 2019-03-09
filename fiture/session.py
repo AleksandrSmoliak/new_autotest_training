@@ -20,8 +20,8 @@ class SessionHelper:
     def return_home_page(self):
         wd = self.app.wd
         wd.find_element_by_link_text("home").click()
-    # Проверяем, что мы разлогинены
 
+    # Проверяем, что мы разлогинены
     def ensure_logout(self):
         if self.is_logged_in():
             self.logout()
