@@ -19,7 +19,8 @@ class SessionHelper:
 
     def return_home_page(self):
         wd = self.app.wd
-        wd.find_element_by_link_text("home").click()
+        if not (wd.current_url.endswith("/addressbook/")) and len(wd.find_elements_by_name("searchstring")):
+            wd.find_element_by_link_text("home").click()
 
     # Проверяем, что мы разлогинены
     def ensure_logout(self):

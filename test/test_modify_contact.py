@@ -29,7 +29,3 @@ def test_modify_contact_lastname(app):
     app.contact.modify_first_contact(Contact(lastname="Путин"))
     # Вернуться на домашнюю страницу
     app.session.return_home_page()
-
-
-
-

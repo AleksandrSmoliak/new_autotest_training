@@ -53,6 +53,8 @@ class ContactHelper:
 
     def delete_first_contact(self):
         wd = self.app.wd
+        # Переход на страницу контактов
+        self.open_contact_page()
         # Активировать чекбокс (первый с этим именем)
         wd.find_element_by_name("selected[]").click()
         # Клик по кнопке удаления
@@ -63,7 +65,8 @@ class ContactHelper:
     # Переход на страницу с контактами
     def open_contact_page(self):
         wd = self.app.wd
-        wd.find_element_by_link_text("home").click()
+        if not (len(wd.find_elements_by_name("searchstring"))) > 0:
+            wd.find_element_by_link_text("home").click()
 
     # Ищет все созданные контакты и вычисляет их длину
     def count(self):
