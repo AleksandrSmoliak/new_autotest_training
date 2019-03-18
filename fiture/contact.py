@@ -1,3 +1,5 @@
+from model.contact import Contact
+
 class ContactHelper:
     def __init__(self, app):
         self.app = app
@@ -89,3 +91,15 @@ class ContactHelper:
     def open_first_contact_modify(self):
         wd = self.app.wd
         wd.find_element_by_xpath("//img[@title='Edit']").click()
+
+    # Получение списка контактов со страницы в приложении
+    def get_contact_list(self):
+        wd = self.app.wd
+        self.open_contact_page()
+        contacts = []
+        for element in wd.find_elements_by_xpath("//tr[@name='entry']"):
+            id = element.find_element_by_xpath("//td[1]/input").get_attribute("id")
+            ln = element.find_element_by_xpath("//td[2]").text
+            fn = element.find_element_by_xpath("//td[3]").text
+            contacts.append(Contact(id=id, lastname=ln, firstname=fn))
+        return contacts

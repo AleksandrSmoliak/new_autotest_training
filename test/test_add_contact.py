@@ -10,6 +10,7 @@ def test_test_add_contact(app):
                                birthday_selected="//div[@id='content']/form/select[1]//option[12]",
                                birthmont_selected="//div[@id='content']/form/select[2]//option[7]", byear="1983",
                                home_address="Домашний адрес"))
+    
     # Вернуться на домашнюю страницу
     app.session.return_home_page()
 
