@@ -24,7 +24,13 @@ class Contact:
         self.byear = byear
         self.home_address = home_address
 
+    # Функция для обозначения представления контактов в консоли при отладке и ошибках
+    def __repr__(self):
+        return "%s:%s:%s" % (self.id, self.lastname, self.firstname)
 
+    # Функция опркеделяющая принцип сравнения объектов данного класса
+    def __eq__(self, other):
+        return self.id == other.id and self.lastname == other.lastname and self.firstname == other.firstname
 
 
 

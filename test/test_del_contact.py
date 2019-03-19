@@ -13,5 +13,9 @@ def test_del_contact(app):
     new_contacts = app.contact.get_contact_list()
     # Сравниваем длину старого и нового списков
     assert len(old_contacts) - 1 == len(new_contacts)
+    # Удаляем первый элемент из старого списка контактов
+    old_contacts[0:1] = []
+    # Сравниваем старый и новый списка групп
+    assert old_contacts == new_contacts
     # Вернуться на домашнюю страницу
     app.session.return_home_page()
