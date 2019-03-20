@@ -1,3 +1,6 @@
+from sys import maxsize
+
+
 class Contact:
     def __init__(self, id=None, firstname=None, middlename=None, lastname=None, nickname=None, title=None, company_name=None,
                  company_address=None, home_phone=None, mobile_phone=None, work_phone=None, fax_phone=None,
@@ -30,7 +33,15 @@ class Contact:
 
     # Функция опркеделяющая принцип сравнения объектов данного класса
     def __eq__(self, other):
-        return self.id == other.id and self.lastname == other.lastname and self.firstname == other.firstname
+        return (self.id == other.id or self.id is None or other.id is None) and self.lastname == other.lastname and self.firstname == other.firstname
+
+    # Подставляем максимальное значение если ид не опеределен, иначе возвращаем знавчение полученного ид
+    # (функция) используется как ключ для сортировки списка
+    def id_or_max(self):
+        if self.id:
+            return int(self.id)
+        else:
+            return maxsize
 
 
 
