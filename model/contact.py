@@ -31,9 +31,10 @@ class Contact:
     def __repr__(self):
         return "%s:%s:%s" % (self.id, self.lastname, self.firstname)
 
-    # Функция опркеделяющая принцип сравнения объектов данного класса
+    # Функция определяющая принцип сравнения объектов данного класса
     def __eq__(self, other):
-        return (self.id == other.id or self.id is None or other.id is None) and self.lastname == other.lastname and self.firstname == other.firstname
+        return (self.id == other.id or self.id is None or other.id is None) and (self.lastname == other.lastname or self.lastname is None or other.lastname is None) and \
+               (self.firstname == other.firstname or self.firstname is None or other.firstname is None)
 
     # Подставляем максимальное значение если ид не опеределен, иначе возвращаем знавчение полученного ид
     # (функция) используется как ключ для сортировки списка
