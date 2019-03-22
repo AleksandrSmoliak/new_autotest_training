@@ -21,8 +21,6 @@ def test_modify_contact_firstname(app):
     assert len(old_contact) == len(new_contact)
     # Присваиваем первому контакту модифицируемое значение
     old_contact[0] = contact
-    old_contact = sorted(old_contact, key=Contact.id_or_max)
-    new_contact = sorted(new_contact, key=Contact.id_or_max)
     # Сравниваем новый список из приложения со старым в которы добавили контакт через код
     assert sorted(old_contact, key=Contact.id_or_max) == sorted(new_contact, key=Contact.id_or_max)
     # Вернуться на домашнюю страницу
@@ -39,11 +37,19 @@ def test_modify_contact_firstname(app):
 #    app.session.return_home_page()
 
 
-#def test_modify_contact_lastname(app):
-#    # Проверяем налисие контактов, если нет - создаем
-#    if app.contact.count() == 0:
-#        app.contact.create(Contact(firstname="Тест"))
-#    # Выбираем и модифицируем первый найденный контакт
-#    app.contact.modify_first_contact(Contact(lastname="Путин"))
-#    # Вернуться на домашнюю страницу
-#    app.session.return_home_page()
+def test_modify_contact_lastname(app):
+    # Проверяем налисие контактов, если нет - создаем
+    if app.contact.count() == 0:
+        app.contact.create(Contact(firstname="Тест"))
+    old_contact = app.contact.get_contact_list()
+    contact = Contact(lastname="Путин")
+    contact.id = old_contact.id
+    contact.firstname = old_contact.firstname
+    # Выбираем и модифицируем первый найденный контакт
+    app.contact.modify_first_contact(contact)
+    new_contact = app.contact.get_contact_list()
+    old_contact[0] = contact
+    assert sorted(old_contact, key=Contact.id_or_max) == sorted(new_contact, key=Contact.id_or_max)
+    # Вернуться на домашнюю страницу
+    app.session.return_home_page()
+    
