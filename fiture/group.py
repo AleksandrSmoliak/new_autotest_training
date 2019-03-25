@@ -20,6 +20,8 @@ class GroupHelper:
         wd.find_element_by_name("submit").click()
         # Возврат на страницу со списком групп
         self.return_to_group_page()
+        # Очищаем кеш со списком групп
+        self.group_cache = None
 
 # Заполнение формы
     def fill_group_form(self, group):
@@ -46,6 +48,8 @@ class GroupHelper:
         wd.find_element_by_name("delete").click()
         # Возврат на страницу со списком групп
         self.return_to_group_page()
+        # Очищаем кеш со списком групп
+        self.group_cache = None
 
     def select_first_group(self):
         wd = self.app.wd
@@ -66,6 +70,8 @@ class GroupHelper:
         wd.find_element_by_name("update").click()
         # Возврат на страницу со списком групп
         self.return_to_group_page()
+        # Очищаем кеш со списком групп
+        self.group_cache = None
 
     def open_group_page(self):
         wd = self.app.wd
@@ -79,13 +85,20 @@ class GroupHelper:
         self.open_group_page()
         return len(wd.find_elements_by_name("selected[]"))
 
+    # Кеширование списка групп.
+    group_cache = None
+
     # Получение списка групп
     def get_group_list(self):
-        wd = self.app.wd
-        self.open_group_page()
-        groups = []
-        for element in wd.find_elements_by_css_selector('span.group'):
-            text = element.text
-            id = element.find_element_by_name("selected[]").get_attribute("value")
-            groups.append(Group(name=text, id=id))
-        return groups
+        # Если переменная с кешем пустая, тогда загружаем список
+        if self.group_cache is None:
+            wd = self.app.wd
+            self.open_group_page()
+            self.group_cache = []
+            for element in wd.find_elements_by_css_selector('span.group'):
+                text = element.text
+                id = element.find_element_by_name("selected[]").get_attribute("value")
+                # Добавляем сформированный список в кэш
+                self.group_cache.append(Group(name=text, id=id))
+        # Если переменная с кешем не пустая возвращаем значение из кеша (возвращаем копию значения)
+        return list(self.group_cache)

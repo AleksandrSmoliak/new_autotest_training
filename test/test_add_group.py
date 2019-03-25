@@ -9,10 +9,11 @@ def test_add_group(app):
     group = Group(name="group name", header="group header", footer="group footer")
     # Создание новой группы
     app.group.create(group)
+    # Проверяем что произошло добавление новой группы сравнивая их длину.
+    # Сравниваем с хешем получая длину списка функцией
+    assert len(old_groups) + 1 == app.group.count()
     # Получаем новый список групп
     new_groups = app.group.get_group_list()
-    # Проверяем что произошло добавление новой группы сравнивая их длину
-    assert len(old_groups) + 1 == len(new_groups)
     # Добавляем создаваемую в прилжении группу в старую гуппу для дальнейшего сравнения
     old_groups.append(group)
     # Сравниваем старую и новую группу по содержанию. Сортировка по ИД вычесляемой в функции. Функция используется

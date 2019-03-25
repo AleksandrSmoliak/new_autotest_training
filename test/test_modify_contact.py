@@ -52,4 +52,3 @@ def test_modify_contact_lastname(app):
     assert sorted(old_contact, key=Contact.id_or_max) == sorted(new_contact, key=Contact.id_or_max)
     # Вернуться на домашнюю страницу
     app.session.return_home_page()
-    
