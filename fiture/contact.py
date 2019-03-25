@@ -56,11 +56,15 @@ class ContactHelper:
                 wd.find_element_by_xpath(value).click()
 
     def delete_first_contact(self):
+        self.delete_contact_by_index(0)
+
+    # Удаление контакта по переданному индексу
+    def delete_contact_by_index(self, index):
         wd = self.app.wd
         # Переход на страницу контактов
         self.open_contact_page()
         # Активировать чекбокс (первый с этим именем)
-        wd.find_element_by_name("selected[]").click()
+        wd.find_elements_by_name("selected[]")[index].click()
         # Клик по кнопке удаления
         wd.find_element_by_xpath("//div[@id='content']/form[2]/div[2]/input").click()
         # Подтверждеие удаления элемента в окне алерта
