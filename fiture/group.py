@@ -39,11 +39,14 @@ class GroupHelper:
             wd.find_element_by_name(field_name).send_keys(text)
 
     def delete_first_group(self):
+        self.delete_group_by_index(0)
+
+    def delete_group_by_index(self, index):
         wd = self.app.wd
         # Переход на страницу с группами
         self.open_group_page()
         # Выбор первой группы
-        self.select_first_group()
+        self.select_group_by_index(index)
         # Удаление первой группы
         wd.find_element_by_name("delete").click()
         # Возврат на страницу со списком групп
@@ -51,17 +54,25 @@ class GroupHelper:
         # Очищаем кеш со списком групп
         self.group_cache = None
 
+    def select_group_by_index(self, index):
+        wd = self.app.wd
+        wd.find_elements_by_name("selected[]")[index].click()
+
     def select_first_group(self):
         wd = self.app.wd
         wd.find_element_by_name("selected[]").click()
 
-# Модификация первой группы
+    # Модифицируем первую группу
     def modify_first_group(self, new_group_data):
+        self.modify_group_by_index(new_group_data, 0)
+
+    # Модификация группы по индексу
+    def modify_group_by_index(self, new_group_data, index):
         wd = self.app.wd
         # Переход на страницу с группами
         self.open_group_page()
-        # Выбор первой группы
-        self.select_first_group()
+        # Выбор группы с переданным индексом
+        self.select_group_by_index(index)
         # Откртие формы для модификации
         wd.find_element_by_name("edit").click()
         # Заполение формы
