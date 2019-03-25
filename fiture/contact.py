@@ -83,13 +83,16 @@ class ContactHelper:
         wd = self.app.wd
         return len(wd.find_elements_by_name("selected[]"))
 
-    # Модификация первого контакта
     def modify_first_contact(self, new_contact_field):
+        self.modify_contact_by_index(new_contact_field, 0)
+
+    # Модификация первого контакта
+    def modify_contact_by_index(self, new_contact_field, index):
         wd = self.app.wd
         # Переход на страницу с контактами
         self.open_contact_page()
         # Выбор первой группы в режиме редактирования
-        self.open_first_contact_modify()
+        self.open_contact_modify_by_index(index)
         # Заполнение формы
         self.fill_contact_form(new_contact_field)
         # Сохранение изменений
@@ -98,12 +101,11 @@ class ContactHelper:
         self.contact_cache = None
 
     # Открытие первого контакта на редактирование
-    def open_first_contact_modify(self):
+    def open_contact_modify_by_index(self, index):
         wd = self.app.wd
-        wd.find_element_by_xpath("//img[@title='Edit']").click()
+        wd.find_elements_by_xpath("//img[@title='Edit']")[index].click()
 
     # Кеширование списка контактов
-
     contact_cache = None
 
     # Получение списка контактов со страницы в приложении
@@ -117,4 +119,4 @@ class ContactHelper:
                 ln = element.find_element_by_xpath("td[2]").text
                 fn = element.find_element_by_xpath("td[3]").text
                 self.contact_cache.append(Contact(id=id, lastname=ln, firstname=fn))
-        return self.contact_cache
+        return list(self.contact_cache)
