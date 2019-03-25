@@ -17,7 +17,7 @@ def test_test_add_contact(app):
     # Получаем новый список контактов
     new_contact = app.contact.get_contact_list()
     # Сравниваем длину списков до и после добавления
-    assert len(old_contact) + 1 == len(new_contact)
+    assert len(old_contact) + 1 == app.contact.count()
     # Добавляем в старый список контактов создаваемый в приложении контакт
     old_contact.append(contact)
     # Сортируем и сравниваем старый и новый списка контактов
