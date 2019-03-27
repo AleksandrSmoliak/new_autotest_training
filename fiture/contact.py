@@ -119,5 +119,24 @@ class ContactHelper:
                 id = element.find_element_by_xpath("td[1]/input").get_attribute("id")
                 ln = element.find_element_by_xpath("td[2]").text
                 fn = element.find_element_by_xpath("td[3]").text
-                self.contact_cache.append(Contact(id=id, lastname=ln, firstname=fn))
+                # Получаем содержимое ячейки с телефонами и разделяем его по переводу строки
+                all_phones = element.find_element_by_xpath("td[6]").text.splitlines()
+                # Формируем объект
+                self.contact_cache.append(Contact(id=id, lastname=ln, firstname=fn, home_phone=all_phones[0],
+                                                  mobile_phone=all_phones[1], work_phone=all_phones[2],
+                                                  sec_phone=all_phones[3]))
         return list(self.contact_cache)
+
+    # Получение информации о контакте со страницы редактирования
+    def get_contact_info_from_edit_page(self, index):
+        wd = self.app.wd
+        self.open_contact_modify_by_index(index)
+        id = wd.find_element_by_xpath("//input[@name='id']").get_attribute("value")
+        firstname = wd.find_element_by_xpath("//input[@name='firstname']").get_attribute("value")
+        lastname = wd.find_element_by_xpath("//input[@name='lastname']").get_attribute("value")
+        home_phone = wd.find_element_by_xpath("//input[@name='home']").get_attribute("value")
+        mobile_phone = wd.find_element_by_xpath("//input[@name='mobile']").get_attribute("value")
+        work_phone = wd.find_element_by_xpath("//input[@name='work']").get_attribute("value")
+        sec_phone = wd.find_element_by_xpath("//input[@name='phone2']").get_attribute("value")
+        return Contact(id=id, firstname=firstname, lastname=lastname, home_phone=home_phone, mobile_phone=mobile_phone,
+                       work_phone=work_phone, sec_phone=sec_phone)
