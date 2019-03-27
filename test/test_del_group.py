@@ -1,6 +1,7 @@
 from model.group import Group
 from random import randrange
 
+
 def test_delete_some_group(app):
     # Проверяем наличие групп. Если их нет, то создаем.
     if app.group.count() == 0:

@@ -1,5 +1,6 @@
 from sys import maxsize  # импорт константы возвращающей максимальное число
 
+
 class Group:
     def __init__(self, name=None, header=None, footer=None, id=None):
         self.name = name

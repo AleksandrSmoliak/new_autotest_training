@@ -1,6 +1,7 @@
 from model.contact import Contact
 from random import randrange
 
+
 def test_del_contact(app):
     # Проверяем наличие контактов. Если их нет создаем
     if app.contact.count() == 0:

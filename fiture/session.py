@@ -34,8 +34,12 @@ class SessionHelper:
 
     # Проверка на то, что мы авторизованы под нужным юзером.
     def is_logged_in_as(self, username):
+        return self.get_logged_user() == username
+
+    # Получаем логин авторизованного пользователя и отсекаем первый и последний символ(скобки)
+    def get_logged_user(self):
         wd = self.app.wd
-        return wd.find_element_by_xpath("//div/div[1]/form/b").text == "("+username+")"
+        return wd.find_element_by_xpath("//div/div[1]/form/b").text[1:-1]
 
     # Проверяем, что мы залогинены
     def ensure_login(self, username, password):

@@ -23,14 +23,14 @@ class GroupHelper:
         # Очищаем кеш со списком групп
         self.group_cache = None
 
-# Заполнение формы
+    # Заполнение формы
     def fill_group_form(self, group):
         self.change_field_value("group_name", group.name)
         self.change_field_value("group_header", group.header)
         self.change_field_value("group_footer", group.footer)
 
-# Мотод проверки на передачу НЕ пустого значения. Если имеется переданное значение то заполняем поле
-# иначе оставляем то, что было.
+    # Мотод проверки на передачу НЕ пустого значения. Если имеется переданное значение то заполняем поле
+    # иначе оставляем то, что было.
     def change_field_value(self, field_name, text):
         wd = self.app.wd
         if text is not None:
