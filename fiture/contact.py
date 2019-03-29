@@ -1,4 +1,5 @@
 from model.contact import Contact
+import re
 
 
 class ContactHelper:
@@ -33,6 +34,7 @@ class ContactHelper:
         self.change_field_value("mobile", contact.mobile_phone)
         self.change_field_value("work", contact.work_phone)
         self.change_field_value("fax", contact.fax_phone)
+        self.change_field_value("phone2", contact.sec_phone)
         self.change_field_value("email", contact.email)
         self.change_field_value("email2", contact.email2)
         self.change_field_value("email3", contact.email3)
@@ -101,10 +103,17 @@ class ContactHelper:
         # Очищаем кэш списка контактов
         self.contact_cache = None
 
-    # Открытие первого контакта на редактирование
+    # Открытие контакта с переданным индексом на редактирование
     def open_contact_modify_by_index(self, index):
         wd = self.app.wd
+        self.open_contact_page()
         wd.find_elements_by_xpath("//img[@title='Edit']")[index].click()
+
+    # Открытие контакта с переданным индексом на просмотр
+    def open_contact_view_page_by_index(self, index):
+        wd = self.app.wd
+        self.open_contact_page()
+        wd.find_elements_by_xpath("//img[@title='Details']")[index].click()
 
     # Кеширование списка контактов
     contact_cache = None
@@ -140,3 +149,18 @@ class ContactHelper:
         sec_phone = wd.find_element_by_xpath("//input[@name='phone2']").get_attribute("value")
         return Contact(id=id, firstname=firstname, lastname=lastname, home_phone=home_phone, mobile_phone=mobile_phone,
                        work_phone=work_phone, sec_phone=sec_phone)
+
+    # Получение информации о номерах телефонов со страницы просмотра контактов
+    def get_contact_view_page(self, index):
+        wd = self.app.wd
+        self.open_contact_view_page_by_index(index)
+        # Присваиваем переменной значение из элемента (все телефоны)
+        text = wd.find_element_by_id("content").text
+        # Находим через регулярку значение в данных с перфиксом и извлекаеи значение грруппы (то что в скобках)
+        # это значение будет искомый номер телефона
+        home_phone = (re.search("H:(.*)", text).group(1))
+        mobile_phone = re.search("M:(.*)", text).group(1)
+        work_phone = re.search("W:(.*)", text).group(1)
+        sec_phone = re.search("P:(.*)", text).group(1)
+        return Contact(home_phone=home_phone, mobile_phone=mobile_phone, work_phone=work_phone, sec_phone=sec_phone)
+
