@@ -9,10 +9,7 @@ def test_phones_on_home_page(app):
     contact_from_edit_page = app.contact.get_contact_info_from_edit_page(0)
     # Сравниваем значения полей с главной страницы и со страницы редактирования контакта
     # Проверяемые значения очищаем от лишних символов
-    assert contact_from_home_page.home_phone == clear(contact_from_edit_page.home_phone)
-    assert contact_from_home_page.mobile_phone == clear(contact_from_edit_page.mobile_phone)
-    assert contact_from_home_page.work_phone == clear(contact_from_edit_page.work_phone)
-    assert contact_from_home_page.sec_phone == clear(contact_from_edit_page.sec_phone)
+    assert contact_from_home_page.all_phones == merge_phones_like_on_home_page(contact_from_edit_page)
 
 
 # Тест сравнения телефонов со страницы просмотра контактов c контактами со страницы редактирования
@@ -37,4 +34,15 @@ def clear_space(s):
 def clear(s):
     # Заменяет по указанному шаблону (что, на что, где)
     return re.sub("[() -]", "", s)
+
+
+def merge_phones_like_on_home_page(contact):
+    # Склеиваем значения из переданного объекта. Строки очищаем от лишних символов, фильтруем значений имеющих значение
+    # None и отвильтровываем получившиеся значения от пустых строк.
+    return "/n".join(filter(lambda x: x != "",
+                            map(lambda x: clear(x),
+                                filter(lambda x: x is not None,
+                                       [contact.home_phone, contact.work_phone,
+                                        contact.mobile_phone, contact.sec_phone]))))
+
 

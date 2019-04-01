@@ -128,12 +128,11 @@ class ContactHelper:
                 id = element.find_element_by_xpath("td[1]/input").get_attribute("id")
                 ln = element.find_element_by_xpath("td[2]").text
                 fn = element.find_element_by_xpath("td[3]").text
-                # Получаем содержимое ячейки с телефонами и разделяем его по переводу строки
-                all_phones = element.find_element_by_xpath("td[6]").text.splitlines()
+                # Получаем содержимое ячейки с телефонами
+                all_phones = element.find_element_by_xpath("td[6]").text
                 # Формируем объект
-                self.contact_cache.append(Contact(id=id, lastname=ln, firstname=fn, home_phone=all_phones[0],
-                                                  mobile_phone=all_phones[1], work_phone=all_phones[2],
-                                                  sec_phone=all_phones[3]))
+                self.contact_cache.append(Contact(id=id, lastname=ln, firstname=fn,
+                                                  all_phones_from_home_page=all_phones))
         return list(self.contact_cache)
 
     # Получение информации о контакте со страницы редактирования
