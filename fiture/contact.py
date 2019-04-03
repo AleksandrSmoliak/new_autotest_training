@@ -55,8 +55,9 @@ class ContactHelper:
     def change_field_value_selected(self, value):
         wd = self.app.wd
         if value is not None:
-            if not wd.find_element_by_xpath(value).is_selected():
-                wd.find_element_by_xpath(value).click()
+            if value !="":
+                if not wd.find_element_by_xpath(value).is_selected():
+                    wd.find_element_by_xpath(value).click()
 
     def delete_first_contact(self):
         self.delete_contact_by_index(0)

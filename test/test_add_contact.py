@@ -1,18 +1,42 @@
 # -*- coding: utf-8 -*-
 from model.contact import Contact
+import pytest
+import string
+import random
 
-    
-def test_test_add_contact(app):
+
+# Генератор случайных строковых данных
+def random_string(prefix, maxlen):
+    # Присваиваем переменной наборы различных символов + пробел
+    symbols = string.ascii_letters + string.digits + " "
+    # Возвращаем строку из склеенных символов. Список будет из случайных символов и случайной длинны с ограничением на
+    # значение maxlen
+    return prefix + "".join([random.choice(symbols) for i in range(random.randrange(maxlen))])
+
+
+# Формируем 2 массива с данными. Первый пустой, а второй генерируется случайными данными, при этом генерируется
+# указанное количество раз, что позволяет создать нескольео наборов с данными.
+testdata = [Contact(firstname="", middlename="", lastname="", nickname="", title="", company_name="", company_address="",
+            home_phone="", mobile_phone="", work_phone="", fax_phone="", sec_phone="", email="", email2="",
+            email3="", homepage="", birthday_selected="", birthmont_selected="", byear="", home_address="")] + [
+    Contact(firstname=random_string("firstname_", 10), middlename=random_string("middlename_", 10),
+            lastname=random_string("lastname_", 10), nickname=random_string("nickname_", 10),
+            title=random_string("title_", 10), company_name=random_string("company_name_", 10),
+            company_address=random_string("company_address_", 10), home_phone=random_string("home_phone_", 10),
+            mobile_phone=random_string(" mobile_phone_", 10), work_phone=random_string("work_phone_", 10),
+            fax_phone=random_string("fax_phone_", 10), sec_phone=random_string("sec_phone_", 10),
+            email=random_string("email_", 10), email2=random_string("email2_", 10), email3=random_string("email3_", 10),
+            homepage=random_string("homepage_", 10), birthday_selected="//div[@id='content']/form/select[1]//option[12]",
+            birthmont_selected="//div[@id='content']/form/select[2]//option[7]", byear="1983",
+            home_address=random_string("home_address_", 10))
+    for i in range(10)
+    ]
+
+
+@pytest.mark.parametrize("contact", testdata, ids=[repr(x) for x in testdata])
+def test_test_add_contact(app, contact):
     # Получаем старый список контактов
     old_contact = app.contact.get_contact_list()
-    # Локальня переменная для передачи параметров в создаваемый контакт
-    contact = Contact(firstname="Александр", middlename="Смоляк", lastname="Владимирович", nickname="crucis",
-                      title="Заголовок", company_name="Имя компании", company_address="адрес компании",
-                      home_phone="9119999999", mobile_phone="9119999991", work_phone="9119999992",
-                      fax_phone="9119999993", sec_phone="9119230078", email="as@as.ru", email2="as@as2.ru", email3="as@as3.ru",
-                      homepage="www.homepage.ru", birthday_selected="//div[@id='content']/form/select[1]//option[12]",
-                      birthmont_selected="//div[@id='content']/form/select[2]//option[7]", byear="1983",
-                      home_address="Домашний адрес")
     # Добавление нового контакта
     app.contact.create(contact)
     # Получаем новый список контактов
