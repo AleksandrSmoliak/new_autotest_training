@@ -84,6 +84,7 @@ class ContactHelper:
     # Ищет все созданные контакты и вычисляет их длину
     def count(self):
         wd = self.app.wd
+        self.open_contact_page()
         return len(wd.find_elements_by_name("selected[]"))
 
     def modify_first_contact(self, new_contact_field):
@@ -128,10 +129,15 @@ class ContactHelper:
                 id = element.find_element_by_xpath("td[1]/input").get_attribute("id")
                 ln = element.find_element_by_xpath("td[2]").text
                 fn = element.find_element_by_xpath("td[3]").text
+                # Получаем содержимое ячейки с адресом
+                addr = element.find_element_by_xpath("td[4]").text
+                # Получаем содержимое ячейки с мейлами
+                all_mails = element.find_element_by_xpath("td[5]").text
                 # Получаем содержимое ячейки с телефонами
                 all_phones = element.find_element_by_xpath("td[6]").text
                 # Формируем объект
-                self.contact_cache.append(Contact(id=id, lastname=ln, firstname=fn,
+                self.contact_cache.append(Contact(id=id, firstname=fn, lastname=ln, company_address=addr,
+                                                  all_mails_from_home_page=all_mails,
                                                   all_phones_from_home_page=all_phones))
         return list(self.contact_cache)
 
@@ -142,12 +148,17 @@ class ContactHelper:
         id = wd.find_element_by_xpath("//input[@name='id']").get_attribute("value")
         firstname = wd.find_element_by_xpath("//input[@name='firstname']").get_attribute("value")
         lastname = wd.find_element_by_xpath("//input[@name='lastname']").get_attribute("value")
+        addr = wd.find_element_by_xpath("//textarea[@name='address']").text
+        email = wd.find_element_by_xpath("//input[@name='email']").get_attribute("value")
+        email2 = wd.find_element_by_xpath("//input[@name='email2']").get_attribute("value")
+        email3 = wd.find_element_by_xpath("//input[@name='email3']").get_attribute("value")
         home_phone = wd.find_element_by_xpath("//input[@name='home']").get_attribute("value")
         mobile_phone = wd.find_element_by_xpath("//input[@name='mobile']").get_attribute("value")
         work_phone = wd.find_element_by_xpath("//input[@name='work']").get_attribute("value")
         sec_phone = wd.find_element_by_xpath("//input[@name='phone2']").get_attribute("value")
-        return Contact(id=id, firstname=firstname, lastname=lastname, home_phone=home_phone, mobile_phone=mobile_phone,
-                       work_phone=work_phone, sec_phone=sec_phone)
+        return Contact(id=id, firstname=firstname, lastname=lastname, company_address=addr, email=email, email2=email2,
+                       email3=email3, home_phone=home_phone, mobile_phone=mobile_phone, work_phone=work_phone,
+                       sec_phone=sec_phone)
 
     # Получение информации о номерах телефонов со страницы просмотра контактов
     def get_contact_view_page(self, index):

@@ -5,7 +5,7 @@ class Contact:
     def __init__(self, id=None, firstname=None, middlename=None, lastname=None, nickname=None, title=None, company_name=None,
                  company_address=None, home_phone=None, mobile_phone=None, work_phone=None, fax_phone=None, sec_phone = None,
                  email=None, email2=None, email3=None, homepage=None, birthday_selected=None, birthmont_selected=None,
-                 byear=None, home_address=None, all_phones_from_home_page=None):
+                 byear=None, home_address=None, all_phones_from_home_page=None, all_mails_from_home_page=None):
         self.id = id
         self.firstname = firstname
         self.middlename = middlename
@@ -28,10 +28,13 @@ class Contact:
         self.byear = byear
         self.home_address = home_address
         self.all_phones_from_home_page = all_phones_from_home_page
+        self.all_mails_from_home_page = all_mails_from_home_page
 
     # Функция для обозначения представления контактов в консоли при отладке и ошибках
     def __repr__(self):
-        return "%s:%s:%s" % (self.id, self.lastname, self.firstname)
+        return "%s:%s:%s:%s:%s:%s:%s:%s:%s:%s:%s" % (self.id, self.firstname, self.lastname, self.company_address,
+                                                     self.email, self.email2, self.email3, self.home_phone,
+                                                     self.mobile_phone, self.work_phone, self.sec_phone)
 
     # Функция определяющая принцип сравнения объектов данного класса
     def __eq__(self, other):
