@@ -41,7 +41,7 @@ class SessionHelper:
         wd = self.app.wd
         return wd.find_element_by_xpath("//div/div[1]/form/b").text[1:-1]
 
-    # Проверяем, что мы залогинены
+    # Проверяем, что мы залогинены под нужным юзером иначе делаем логаут и логинимся
     def ensure_login(self, username, password):
         if self.is_logged_in():
             # Проверяем, что авторизованы под нужным юзером
