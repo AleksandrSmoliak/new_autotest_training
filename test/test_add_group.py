@@ -1,25 +1,10 @@
 # -*- coding: utf-8 -*-
 from model.group import Group
 import pytest
-import random
-import string
-
-
-# Генератор случайных тестовых данных
-def random_string(prefix, maxlen):
-    # Присваиваем переменной наборы различных символов + пробел
-    symbols = string.ascii_letters + string.digits + string.punctuation + " "*10
-    # Возвращаем строку из склеенных символов. Список будет из случайных символов и случайной длинны с ограничением на
-    # значение maxlen
-    return prefix + "".join([random.choice(symbols) for i in range(random.randrange(maxlen))])
-
-
-# Формируем 2 массива с данными. Первый пустой, а второй генерируется случайными данными, при этом генерируется
-# указанное количество раз, что позволяет создать нескольео наборов с данными.
-testdata = [Group(name="", header="", footer="")] + [
-    Group(name=random_string("name", 10), header=random_string("header", 20), footer=random_string("footer", 20))
-    for i in range(5)
-]
+# Импортируем генератор тестовых данных из файла (созданный пакет для хранения тестовых данных)
+#from data.add_group import testdata
+# При необходимости использовать другой набор данных из файла, что бы не переписывать код теста
+from data.add_group import constant as testdata
 
 
 # Первая строка говорит, что тест парамметризован и указываем что передеаем и откуда в качестве данных
