@@ -1,10 +1,13 @@
 from fixture.application import Application
 import pytest
-import json
+import jsonpickle
 import os.path
+import importlib
+import json
 
 fixture = None  # Задаем глобальную переменную для определения валидности фикстуры
 target = None  # Задаем глабальную переменную для определения конфига
+
 
 @pytest.fixture
 def app(request):
@@ -46,3 +49,34 @@ def stop(request):
 def pytest_addoption(parser):
     parser.addoption("--browser", action="store", default="chrome")
     parser.addoption("--target", action="store", default="target.json")
+
+
+# Предназначено для определения переменной в тестах которые используются в качестве тестовых данных.
+def pytest_generate_tests(metafunc):
+    for fixture in metafunc.fixturenames:
+        # Если встречаем фикстуру которая начинается на data_ (в тесте это переменная которая например имеет
+        # имя data_groups)
+        if fixture.startswith("data_"):
+            # Тогда загружаем модуль который имеет такое же имя как фикстура только обрезаем первые 5 символов
+            testdata = load_from_module(fixture[5:])
+            # используем загруженные тестовые данные, что бы параметризовать тестовую функцию
+            metafunc.parametrize(fixture, testdata, ids=[str(x) for x in testdata])
+        elif fixture.startswith("json_"):
+            # Тогда загружаем модуль который имеет такое же имя как фикстура только обрезаем первые 5 символов
+            testdata = load_from_json(fixture[5:])
+            # используем загруженные тестовые данные, что бы параметризовать тестовую функцию
+            metafunc.parametrize(fixture, testdata, ids=[str(x) for x in testdata])
+
+
+# Загружаем данные из модуля с заданным именем
+def load_from_module(module):
+    # импортируем модул по пути указанному в скобках (путем склейки) и берет из него данные из переменной testdata
+    return importlib.import_module("data.%s" % module).constant
+
+
+# Функция для загрузки данных из файла json
+def load_from_json(file):
+    # Открываем файл с данными и передаем их в перемменную
+    with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "data/%s.json" % file)) as f:
+        # Читаем данные из открытого файла и перекодируем их в набор данных в виде объектов
+        return jsonpickle.decode(f.read())

@@ -2,7 +2,7 @@ import random
 import string
 import os.path
 from model.group import Group
-import json
+import jsonpickle
 
 
 # Генератор случайных тестовых данных
@@ -27,8 +27,8 @@ file = os.path.join(os.path.dirname(os.path.abspath(__file__)), "../data/group.j
 
 # Открываем файл на запись (w - это режим на запись)
 with open(file, "w") as f:
-    # Записываем данные. Функция dumps превращает данные в строку в формате json. Функция default преобразовывает
-    # данные в словарь (т.к. dumps не знает как преобразовать текущие данные в json). А __dict__ содержит все
-    # поля которые мы задаем в классе (в данном случае Group). indent = 2 это параметр указывающий на уровни
-    # вложенности для форматирования данных
-    f.write(json.dumps(testdata, default=lambda x: x.__dict__, indent=2))
+    # Задаем формат записи в файл (в 2 уровня)
+    jsonpickle.set_encoder_options("json", indent=2)
+    # Преобразуем данные в формат json и записываем эти данные в файл. Так же при приобразовании в файл записывается
+    # тип объекта из которого преобразуются данные в поле py/object
+    f.write(jsonpickle.encode(testdata))
