@@ -2,7 +2,9 @@
 from model.contact import Contact
 
 
-def test_test_add_contact(app, contact):
+def test_test_add_contact(app, json_contact):
+    # Присваиваем набор данных из параметра переменной используемой далее в тесте.
+    contact = json_contact
     # Получаем старый список контактов
     old_contact = app.contact.get_contact_list()
     # Добавление нового контакта

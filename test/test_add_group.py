@@ -13,6 +13,7 @@ from data.groups import constant as testdata
 # В тесте во втором параметре указываем на источник тестовых данных который подтягивается из
 # фикстуры (pytest_generate_tests)
 def test_add_group(app, json_group):
+    # Присваиваем набор данных из параметра переменной используемой далее в тесте.
     group = json_group
     # Получаем старый список групп
     old_groups = app.group.get_group_list()
