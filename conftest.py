@@ -4,33 +4,39 @@ import jsonpickle
 import os.path
 import importlib
 import json
+from fixture.db import DbFixture
 
 fixture = None  # Задаем глобальную переменную для определения валидности фикстуры
 target = None  # Задаем глабальную переменную для определения конфига
 
 
-@pytest.fixture
-def app(request):
-    global fixture  # Объявление глобальной переменной фикстуры
-    global target  # Объявление глобальной переменной конфига
-    # Создаем переменную в которую передаем параметр с типом браузера
-    browser = request.config.getoption("--browser")
-    # Загружаем конфиг если ранее он не был загружен
+# Инициализируем отдельную функцию, которая будет заниматься загрузкой данных из файла
+def load_config(file):
+    global target # Объявление глобальной переменной конфига
     if target is None:
         # Определяем местоположение конфига относительно текущего файла и присваиваем его переременной
         # которую далее используем для чтения содержимого конфига
-        config_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), request.config.getoption("--target"))
+        config_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), file)
         # Читаем конфигурационный файл переданный в виде параметра (содержимое загруженного файла передаем в
         # переменную f).
         with open(config_file) as f:
             # В переменную target передаем содержимое загруженного файла как json
             target = json.load(f)
+    return target
+
+@pytest.fixture
+def app(request):
+    global fixture  # Объявление глобальной переменной фикстуры
+    # Создаем переменную в которую передаем параметр с типом браузера
+    browser = request.config.getoption("--browser")
+    # Загружаем данные из конфига из блока web
+    web_config = load_config(request.config.getoption("--target"))['web']
     # Проверяем, если фикстуры нету или она не валидна, тогда создаем ее.
     if fixture is None or not fixture.is_valid():
         # Создаем фикстуру (объект типа Application). Для передачи параметра из файла используем переменную target
-        fixture = Application(browser=browser, base_url=target['baseURL'])
+        fixture = Application(browser=browser, base_url=web_config['baseURL'])
     # Авторизуемся. Для передачи параметра из файла используем переменную target
-    fixture.session.ensure_login(username=target['username'], password=target['password'])
+    fixture.session.ensure_login(username=web_config['username'], password=web_config['password'])
     return fixture
 
 
@@ -80,3 +86,15 @@ def load_from_json(file):
     with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "data/%s.json" % file)) as f:
         # Читаем данные из открытого файла и перекодируем их в набор данных в виде объектов
         return jsonpickle.decode(f.read())
+
+
+# Создаем фикстуру для работы с БД
+@pytest.fixture(scope="session")
+def db(request):
+    # Загружаем данные из конфига из блока web
+    db_config = load_config(request.config.getoption("--target"))['db']
+    dbfixture = DbFixture(host=db_config['host'], name=db_config['name'], user=db_config['user'], password=db_config['password'])
+    def fin():
+        dbfixture.destroy()
+    request.addfinalizer(fin)
+    return dbfixture
