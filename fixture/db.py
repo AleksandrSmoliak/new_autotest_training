@@ -7,7 +7,10 @@ class DbFixture:
         self.name = name
         self.user = user
         self.password = password
+        # Тут происходит инициализация соединения с БД
         self.connection = pymysql.connect(host=host, database=name, user=user, password=password)
+        # Отключаем кэширование в БД
+        self.connection.autocommit(True)
 
     # Загрузка списка контактов из БД
     def get_group_list(self):

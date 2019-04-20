@@ -10,6 +10,7 @@ class GroupHelper:
         if not (wd.current_url.endswith("/group.php") and len(wd.find_elements_by_link_text("new")) > 0):
             wd.find_element_by_link_text("groups").click()
 
+    # Создание группы
     def create(self, group):
         wd = self.app.wd
         # Переход на страницу с группами
@@ -38,9 +39,11 @@ class GroupHelper:
             wd.find_element_by_name(field_name).clear()
             wd.find_element_by_name(field_name).send_keys(text)
 
+    # Удаление первой группы
     def delete_first_group(self):
         self.delete_group_by_index(0)
 
+    # Удаление группы по индексу
     def delete_group_by_index(self, index):
         wd = self.app.wd
         # Переход на страницу с группами
@@ -54,10 +57,31 @@ class GroupHelper:
         # Очищаем кеш со списком групп
         self.group_cache = None
 
+    # Удаление группы по ИД
+    def delete_group_by_id(self, id):
+        wd = self.app.wd
+        # Переход на страницу с группами
+        self.open_group_page()
+        # Выбор группы по ИД
+        self.select_group_by_id(id)
+        # Удаление первой группы
+        wd.find_element_by_name("delete").click()
+        # Возврат на страницу со списком групп
+        self.return_to_group_page()
+        # Очищаем кеш со списком групп
+        self.group_cache = None
+
+    # Выбор группы по индексу
     def select_group_by_index(self, index):
         wd = self.app.wd
         wd.find_elements_by_name("selected[]")[index].click()
 
+        # Выбор группы по ИД
+    def select_group_by_id(self, id):
+        wd = self.app.wd
+        wd.find_element_by_css_selector("input[value='%s']" % id).click()
+
+    # Выбор первой группы
     def select_first_group(self):
         wd = self.app.wd
         wd.find_element_by_name("selected[]").click()

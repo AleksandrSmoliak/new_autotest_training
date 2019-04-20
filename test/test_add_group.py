@@ -12,18 +12,15 @@ from data.groups import constant as testdata
 #@pytest.mark.parametrize("group", testdata, ids=[repr(x) for x in testdata])
 # В тесте во втором параметре указываем на источник тестовых данных который подтягивается из
 # фикстуры (pytest_generate_tests)
-def test_add_group(app, json_group):
+def test_add_group(app, db, json_group):
     # Присваиваем набор данных из параметра переменной используемой далее в тесте.
     group = json_group
-    # Получаем старый список групп
-    old_groups = app.group.get_group_list()
-    # Создание новой группы
+    # Получаем старый список групп из БД
+    old_groups = db.get_group_list()
+    # Создание новой группы из приложения
     app.group.create(group)
-    # Проверяем что произошло добавление новой группы сравнивая их длину.
-    # Сравниваем с хешем получая длину списка функцией
-    assert len(old_groups) + 1 == app.group.count()
-    # Получаем новый список групп
-    new_groups = app.group.get_group_list()
+    # Получаем новый список групп из БД
+    new_groups = db.get_group_list()
     # Добавляем создаваемую в прилжении группу в старую гуппу для дальнейшего сравнения
     old_groups.append(group)
     # Сравниваем старую и новую группу по содержанию. Сортировка по ИД вычесляемой в функции. Функция используется
