@@ -1,23 +1,23 @@
 from model.contact import Contact
-from random import randrange
+import random
 
 
-def test_del_contact(app):
+def test_del_contact(app, db):
     # Проверяем наличие контактов. Если их нет создаем
     if app.contact.count() == 0:
         app.contact.create(Contact(firstname="Александр", middlename="Смоляк"))
-    # Получаем старый список контактов
-    old_contacts = app.contact.get_contact_list()
-    # Генерируем случайный индекс для выбора случайной группы из списка
-    index = randrange(len(old_contacts))
+    # Получаем старый список контактов из БД
+    old_contacts = db.get_contact_list()
+    # Получаем случайный контакт из полученного списка контактов
+    contact = random.choice(old_contacts)
     # Удаление случайного контакта по индексу
-    app.contact.delete_contact_by_index(index)
+    app.contact.delete_contact_by_id(contact.id)
     # Получаем новый список контактов
-    new_contacts = app.contact.get_contact_list()
+    new_contacts = db.get_contact_list()
     # Сравниваем длину старого и нового списков
     assert len(old_contacts) - 1 == len(new_contacts)
     # Удаляем из старого списка контактов элемент полученный с использованием случайного индекса
-    old_contacts[index:index + 1] = []
+    old_contacts.remove(contact)
     # Сравниваем старый и новый списка групп
     assert old_contacts == new_contacts
     # Вернуться на домашнюю страницу

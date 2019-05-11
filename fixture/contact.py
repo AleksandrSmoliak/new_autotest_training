@@ -1,5 +1,6 @@
 from model.contact import Contact
 import re
+import time
 
 
 class ContactHelper:
@@ -75,6 +76,22 @@ class ContactHelper:
         wd.switch_to_alert().accept()
         # Очищаем кэш списка контактов
         self.contact_cache = None
+
+    # Удаление контакта по переданному id
+    def delete_contact_by_id(self, id):
+        wd = self.app.wd
+        # Переход на страницу контактов
+        self.open_contact_page()
+        # Активировать чекбокс c переданным id
+        wd.find_element_by_css_selector("input[value='%s']" % id).click()
+        # Клик по кнопке удаления
+        wd.find_element_by_xpath("//div[@id='content']/form[2]/div[2]/input").click()
+        # Подтверждеие удаления элемента в окне алерта
+        wd.switch_to_alert().accept()
+        time.sleep(1)
+        # Очищаем кэш списка контактов
+        self.contact_cache = None
+
 
     # Переход на страницу с контактами
     def open_contact_page(self):
