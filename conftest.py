@@ -51,10 +51,20 @@ def stop(request):
     return fixture
 
 
+# Функция определяющая необходимость выполнения проверок из пользовательского интерфейса
+@pytest.fixture
+def check_ui(request):
+    return request.config.getoption("--check_ui")
+
+
 # Функция позволяющая через параметр в консоли передавать тип браузера
 def pytest_addoption(parser):
     parser.addoption("--browser", action="store", default="chrome")
     parser.addoption("--target", action="store", default="target.json")
+    # store_true - при таком значении автоматически указывается true если опция присутствует и false если отсутствует
+    parser.addoption("--check_ui", action="store_true")
+
+
 
 
 # Предназначено для определения переменной в тестах которые используются в качестве тестовых данных.
