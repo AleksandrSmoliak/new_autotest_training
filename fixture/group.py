@@ -137,3 +137,12 @@ class GroupHelper:
                 self.group_cache.append(Group(name=text, id=id))
         # Если переменная с кешем не пустая возвращаем значение из кеша (возвращаем копию значения)
         return list(self.group_cache)
+
+    def select_add_to_group_by_id(self, id):
+        wd = self.app.wd
+        wd.find_element_by_xpath("//div[@class='right']/select[@name='to_group']//option[@value='%s']" % id).click()
+
+    def add_to_group_by_id(self, id):
+        wd = self.app.wd
+        self.select_add_to_group_by_id(id)
+        wd.find_element_by_css_selector("input[name='add']").click()

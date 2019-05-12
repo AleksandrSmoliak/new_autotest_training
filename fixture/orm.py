@@ -84,4 +84,3 @@ class ORMFixture:
         # Выбираем список контактов у которых список групп не содержит заданную группу
         return self.convert_contacts_to_model(
             select(c for c in ORMFixture.ORMContact if c.deprecated is None and orm_group not in c.groups))
-        # Конвертивуем полученный список в модельшые объекты класса

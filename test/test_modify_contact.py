@@ -1,29 +1,29 @@
 from model.contact import Contact
-from random import randrange
+import random
 
 
-def test_modify_contact_firstname(app):
+def test_modify_contact_firstname(app, db):
     # Проверяем налисие контактов, если нет - создаем
     if app.contact.count() == 0:
         app.contact.create(Contact(firstname="Тест"))
     # Получаем старый список контактов
-    old_contact = app.contact.get_contact_list()
-    # Генерируем случайный индекс для выбора случайного контакта для изменения
-    index = randrange(len(old_contact))
-    # Локальна переменная для хранения объекта изменяемого контакта
-    contact = Contact(firstname="Владимир")
-    # Сохраняем ид модифицируемого контакта
-    contact.id = old_contact[index].id
-    # Сохраняем фамилию модифицируемого контакта
-    contact.lastname = old_contact[index].lastname
+    old_contact = db.get_contact_list()
+    # Получаем случайный объект из списка контактов
+    contact = random.choice(old_contact)
+    # оздаем объект для изменения контакта
+    contact_data = Contact(firstname="Владимир2", lastname="Геннадьевич2")
     # Выбираем и модифицируем первый найденный контакт
-    app.contact.modify_contact_by_index(contact, index)
+    app.contact.modify_contact_by_id(contact_data, contact.id)
     # Получаем новый список контактов
-    new_contact = app.contact.get_contact_list()
+    new_contact = db.get_contact_list()
     # Сравниваем длину списков до и после модификации
     assert len(old_contact) == len(new_contact)
-    # Присваиваем первому контакту модифицируемое значение
-    old_contact[index] = contact
+    # Удаляем старое заначение из списка
+    old_contact.remove(contact)
+    # Добавляем в новый объект id случайного контакта
+    contact_data.id = contact.id
+    # Добавляем новый объект в список
+    old_contact.append(contact_data)
     # Сравниваем новый список из приложения со старым в которы добавили контакт через код
     assert sorted(old_contact, key=Contact.id_or_max) == sorted(new_contact, key=Contact.id_or_max)
     # Вернуться на домашнюю страницу

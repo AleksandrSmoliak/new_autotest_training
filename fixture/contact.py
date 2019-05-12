@@ -92,7 +92,6 @@ class ContactHelper:
         # Очищаем кэш списка контактов
         self.contact_cache = None
 
-
     # Переход на страницу с контактами
     def open_contact_page(self):
         wd = self.app.wd
@@ -118,15 +117,38 @@ class ContactHelper:
         # Заполнение формы
         self.fill_contact_form(new_contact_field)
         # Сохранение изменений
+        time.sleep(5)
         wd.find_element_by_name("update").click()
         # Очищаем кэш списка контактов
         self.contact_cache = None
+
+    # Модификация контакта по id
+    def modify_contact_by_id(self, new_contact_field, id):
+        wd = self.app.wd
+        # Переход на страницу с контактами
+        self.open_contact_page()
+        # Выбор первой группы в режиме редактирования
+        self.open_contact_modify_by_id(id)
+        # Заполнение формы
+        self.fill_contact_form(new_contact_field)
+        # Сохранение изменений
+        time.sleep(5)
+        wd.find_element_by_name("update").click()
+        # Очищаем кэш списка контактов
+        self.contact_cache = None
+
+    # Открытие контакта с переданным ид на редактирование
+    def open_contact_modify_by_id(self, id):
+        wd = self.app.wd
+        self.open_contact_page()
+        wd.find_element_by_xpath("//input[@id='%s']/../../td[8]/a/img" % id).click()
 
     # Открытие контакта с переданным индексом на редактирование
     def open_contact_modify_by_index(self, index):
         wd = self.app.wd
         self.open_contact_page()
         wd.find_elements_by_xpath("//img[@title='Edit']")[index].click()
+
 
     # Открытие контакта с переданным индексом на просмотр
     def open_contact_view_page_by_index(self, index):
@@ -191,4 +213,8 @@ class ContactHelper:
         work_phone = re.search("W:(.*)", text).group(1)
         sec_phone = re.search("P:(.*)", text).group(1)
         return Contact(home_phone=home_phone, mobile_phone=mobile_phone, work_phone=work_phone, sec_phone=sec_phone)
+
+    def select_contact_by_id(self, id):
+        wd = self.app.wd
+        wd.find_element_by_css_selector("input[value = '%s']" % id).click()
 
